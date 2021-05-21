@@ -58,6 +58,8 @@ module.exports = class RollCommand extends Command {
         die = Math.abs(parseInt(die));
         if (die > 30)
             die = 30;
+        if (die === 0)
+            die = 1;
         hunger_die = Math.abs(parseInt(hunger_die));
         if (hunger_die > 5)
             hunger_die = 5
