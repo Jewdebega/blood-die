@@ -92,12 +92,22 @@ module.exports = class RerollCommand extends Command {
                     return old_roll.say(`<@${author.id}> Can't re-roll other user's rolls.`)
                 };
 
-                newEmbed = new MessageEmbed(recievedEmbed).setTitle('Blank');
                 var die_roll = recievedEmbed.fields[0].value.slice(2, -2).split(',');
+
                 if (recievedEmbed.fields[1].value.slice(2, -2).split(',')[0] === '')
                     var hunger_die_roll = [];
                 else
                     var hunger_die_roll = recievedEmbed.fields[1].value.slice(2, -2).split(',');
+                
+                if (recievedEmbed.fields[2] != undefined && recievedEmbed.fields[2].name === `🗳️ Difficulty`)
+                    var difficulty = Math.abs(
+                        parseInt(
+                            recievedEmbed.fields[2].value.slice(2,-2)
+                        )
+                    );
+                else
+                    var difficulty = '';
+                
                 var die = die_roll.length + hunger_die_roll.length
                 var hunger_die = hunger_die_roll.length
                 var rerolled_die = [];
@@ -158,73 +168,312 @@ module.exports = class RerollCommand extends Command {
                 if ( rerolled_die.length > 1 || hunger_die === 0)
                     grammar.rerolled_die_noun = 'dice';
 
-                newEmbed.setTitle(`Rolled \`${success}\` ${grammar.success_noun}`);
-                newEmbed.setAuthor(author.username, author.displayAvatarURL());
-                newEmbed.setDescription(
-                    `${author.username} re-rolled a pool of \`${die}\` ${grammar.die_noun} with \`${hunger_die}\` Hunger ${grammar.hunger_die_noun} for a total of \`${success}\` ${grammar.success_noun} after re-rolling \`${rerolled_die.length}\` ${grammar.rerolled_die_noun}.`
-                );
-                newEmbed.fields = [];
-                newEmbed.addFields(
-                    {
-                        name: `🎲 ${grammar.die_noun.charAt(0).toUpperCase() + grammar.die_noun.slice(1)}:`,
-                        value: `\`[${die_roll}]\``,
-                        inline: true
-                    },
-                    {
-                        name: `🩸 Hunger ${grammar.hunger_die_noun.charAt(0).toUpperCase() + grammar.hunger_die_noun.slice(1)}:`,
-                        value: `\`[${hunger_die_roll}]\``,
-                        inline: true
-                    },
-                    {
-                        name: `🔄 Re-rolled ${grammar.rerolled_die_noun.charAt(0).toUpperCase() + grammar.rerolled_die_noun.slice(1)}:`,
-                        value: `\`[${rerolled_die}]\``,
-                        inline: true
-                    }
-                );
+                if (difficulty === '') {
+                    const Embed = new MessageEmbed()
+                        .setColor('0x8be9fd')
+                        .setTitle(`🗳️ Rolled \`${success}\` ${grammar.success_noun}`)
+                        .setAuthor(message.author.username, message.author.displayAvatarURL())
+                        .setDescription(
+                            `${message.author.username} rolled a pool of \`${die}\` ${grammar.die_noun} with \`${hunger_die}\` Hunger ${grammar.hunger_die_noun} for a total of \`${success}\` ${grammar.success_noun} after re-rolling \`${rerolled_die.length}\` ${grammar.rerolled_die_noun}.`
+                        )
+                        .addFields(
+                            {
+                                name: `🎲 ${grammar.die_noun.charAt(0).toUpperCase() + grammar.die_noun.slice(1)}`,
+                                value: `\`[${die_roll}]\``,
+                                inline: true
+                            },
+                            {
+                                name: `🩸 Hunger ${grammar.hunger_die_noun.charAt(0).toUpperCase() + grammar.hunger_die_noun.slice(1)}`,
+                                value: `\`[${hunger_die_roll}]\``,
+                                inline: true
+                            },
+                            {
+                                name: `🔄 Re-rolled ${grammar.rerolled_die_noun.charAt(0).toUpperCase() + grammar.rerolled_die_noun.slice(1)}`,
+                                value: `\`[${rerolled_die}]\``,
+                                inline: true
+                            }
+                        );
             
-                if (modifiers.critical && ! modifiers.bestial && ! modifiers.messy) {
-                    newEmbed.setColor('0x50fa7b');
-                    newEmbed.addField(
-                        '💥 Critical Win',
-                        '*This roll can be a critical win.*',
-                        false
-                    );
+                    if (modifiers.critical && ! modifiers.bestial && ! modifiers.messy) {
+                        Embed.setColor('0x50fa7b');
+                        Embed.addField(
+                            '💥 Critical Win',
+                            '*This roll can be a critical win.*',
+                            false
+                        );
+                    }
+                    else if (modifiers.critical && modifiers.bestial && !modifiers.messy) {
+                        Embed.setColor('0xff5555');
+                        Embed.addField(
+                            '💥 Critical Win | 👿 Bestial Failure',
+                            '*This roll can be either a critical win or a bestial failure.*',
+                            false
+                        );
+                    }
+                    else if (modifiers.messy && ! modifiers.bestial) {
+                        Embed.setColor('0xff5555');
+                        Embed.addField(
+                            '😈 Messy Critical',
+                            '*This roll can be a messy critical.*',
+                            false
+                        );
+                    }
+                    else if (modifiers.messy && modifiers.bestial) {
+                        Embed.setColor('0xff5555');
+                        Embed.addField(
+                            '😈 Messy Critical | 👿 Bestial Failure',
+                            '*This roll can be either a messy critical or a bestial failure.*',
+                            false
+                        );
+                    }
+                    else if (modifiers.bestial) {
+                        Embed.setColor('0xff5555');
+                        Embed.addField(
+                            '👿 Bestial Failure',
+                            '*This roll can be a bestial failure.*',
+                            false
+                        );
+                    };
+        
+                    message.embed(Embed)
+                        .then(message => message.react('🔄'))
                 }
-                else if (modifiers.critical && modifiers.bestial && !modifiers.messy) {
-                    newEmbed.setColor('0xff5555');
-                    newEmbed.addField(
-                        '💥 Critical Win | 👿 Bestial Failure',
-                        '*This roll can be either a critical win or a bestial failure.*',
-                        false
-                    );
-                }
-                else if (modifiers.messy && ! modifiers.bestial) {
-                    newEmbed.setColor('0xff5555');
-                    newEmbed.addField(
-                        '😈 Messy Critical',
-                        '*This roll can be a messy critical.*',
-                        false
-                    );
-                }
-                else if (modifiers.messy && modifiers.bestial) {
-                    newEmbed.setColor('0xff5555');
-                    newEmbed.addField(
-                        '😈 Messy Critical | 👿 Bestial Failure',
-                        '*This roll can be either a messy critical or a bestial failure.*',
-                        false
-                    );
-                }
-                else if (modifiers.bestial) {
-                    newEmbed.setColor('0xff5555');
-                    newEmbed.addField(
-                        '👿 Bestial Failure',
-                        '*This roll can be a bestial failure.*',
-                        false
-                    );
-                };
+                else if (difficulty * 2 <= die) {
+                    const Embed = new MessageEmbed()
+                        .setColor('0x50fa7b')
+                        .setTitle(`👍 Automatic Win | 🗳️ Rolled \`${success}\` ${grammar.success_noun} out of  of \`${difficulty}\``)
+                        .setAuthor(message.author.username, message.author.displayAvatarURL())
+                        .setDescription(
+                            `${message.author.username} rolled a pool of \`${die}\` ${grammar.die_noun} with \`${hunger_die}\` Hunger ${grammar.hunger_die_noun} for a total of \`${success}\` ${grammar.success_noun} against a difficulty of \`${difficulty}\` after re-rolling \`${rerolled_die.length}\` ${grammar.rerolled_die_noun}.`
+                        )
+                        .addFields(
+                            {
+                                name: `🎲 ${grammar.die_noun.charAt(0).toUpperCase() + grammar.die_noun.slice(1)}`,
+                                value: `\`[${die_roll}]\``,
+                                inline: true
+                            },
+                            {
+                                name: `🩸 Hunger ${grammar.hunger_die_noun.charAt(0).toUpperCase() + grammar.hunger_die_noun.slice(1)}`,
+                                value: `\`[${hunger_die_roll}]\``,
+                                inline: true
+                            },
+                            {
+                                name: `🗳️ Difficulty`,
+                                value: `\`[${difficulty}]\``,
+                                inline: true                        
+                            },
+                            {
+                                name: `🔄 Re-rolled ${grammar.rerolled_die_noun.charAt(0).toUpperCase() + grammar.rerolled_die_noun.slice(1)}`,
+                                value: `\`[${rerolled_die}]\``,
+                                inline: true
+                            },                            
+                            {
+                                name: `👍 Automatic Win`,
+                                value: `*Can be ruled as such by the ST.*`,
+                                inline: true
+                            }
+                        );
+        
+                    if (success >= difficulty) {
+                        if (modifiers.critical && !modifiers.messy) {
+                            Embed.setColor('0x50fa7b');
+                            Embed.addField(
+                                '💥 Critical Win',
+                                '*This roll can be a critical win.*',
+                                false
+                            );
+                        }
+                        else if (modifiers.messy) {
+                            Embed.setColor('0xffb86c');
+                            Embed.addField(
+                                '😈 Messy Critical',
+                                '*This roll can be a messy critical.*',
+                                false
+                            );
+                        };
+                    }
+                    else if (modifiers.bestial) {
+                        Embed.setColor('0xffb86c');
+                        Embed.addField(
+                            '👿 Bestial Failure',
+                            '*This roll can be a bestial failure.*',
+                            false
+                        );
+                    };
 
-                message.embed(newEmbed)
-                    .then(message => message.react('🔄'))
+                    message.embed(Embed)
+                        .then(message => message.react('🔄'))
+                }
+                else if (success >= difficulty && !modifiers.critical) {
+                    const Embed = new MessageEmbed()
+                        .setColor('0x50fa7b')
+                        .setTitle(`👍 Win | 🗳️ Rolled \`${success}\` ${grammar.success_noun} out of  of \`${difficulty}\``)
+                        .setAuthor(message.author.username, message.author.displayAvatarURL())
+                        .setDescription(
+                            `${message.author.username} rolled a pool of \`${die}\` ${grammar.die_noun} with \`${hunger_die}\` Hunger ${grammar.hunger_die_noun} for a total of \`${success}\` ${grammar.success_noun} against a difficulty of \`${difficulty}\` after re-rolling \`${rerolled_die.length}\` ${grammar.rerolled_die_noun}.`
+                        )
+                        .addFields(
+                            {
+                                name: `🎲 ${grammar.die_noun.charAt(0).toUpperCase() + grammar.die_noun.slice(1)}`,
+                                value: `\`[${die_roll}]\``,
+                                inline: true
+                            },
+                            {
+                                name: `🩸 Hunger ${grammar.hunger_die_noun.charAt(0).toUpperCase() + grammar.hunger_die_noun.slice(1)}`,
+                                value: `\`[${hunger_die_roll}]\``,
+                                inline: true
+                            },
+                            {
+                                name: `🗳️ Difficulty`,
+                                value: `\`[${difficulty}]\``,
+                                inline: true                        
+                            },
+                            {
+                                name: `🔄 Re-rolled ${grammar.rerolled_die_noun.charAt(0).toUpperCase() + grammar.rerolled_die_noun.slice(1)}`,
+                                value: `\`[${rerolled_die}]\``,
+                                inline: true
+                            }
+                        );
+                    
+                    message.embed(Embed)
+                        .then(message => message.react('🔄'))
+                }
+                else if (success >= difficulty && modifiers.critical && !modifiers.messy) {
+                    const Embed = new MessageEmbed()
+                        .setColor('0x50fa7b')
+                        .setTitle(`💥 Critical Win | 🗳️ Rolled \`${success}\` ${grammar.success_noun} out of  of \`${difficulty}\``)
+                        .setAuthor(message.author.username, message.author.displayAvatarURL())
+                        .setDescription(
+                            `${message.author.username} rolled a pool of \`${die}\` ${grammar.die_noun} with \`${hunger_die}\` Hunger ${grammar.hunger_die_noun} for a total of \`${success}\` ${grammar.success_noun} against a difficulty of \`${difficulty}\` after re-rolling \`${rerolled_die.length}\` ${grammar.rerolled_die_noun}.`
+                        )
+                        .addFields(
+                            {
+                                name: `🎲 ${grammar.die_noun.charAt(0).toUpperCase() + grammar.die_noun.slice(1)}`,
+                                value: `\`[${die_roll}]\``,
+                                inline: true
+                            },
+                            {
+                                name: `🩸 Hunger ${grammar.hunger_die_noun.charAt(0).toUpperCase() + grammar.hunger_die_noun.slice(1)}`,
+                                value: `\`[${hunger_die_roll}]\``,
+                                inline: true
+                            },
+                            {
+                                name: `🗳️ Difficulty`,
+                                value: `\`[${difficulty}]\``,
+                                inline: true                        
+                            },
+                            {
+                                name: `🔄 Re-rolled ${grammar.rerolled_die_noun.charAt(0).toUpperCase() + grammar.rerolled_die_noun.slice(1)}`,
+                                value: `\`[${rerolled_die}]\``,
+                                inline: true
+                            }
+                        );
+                    
+                    message.embed(Embed)
+                        .then(message => message.react('🔄'))
+                }
+                else if (success >= difficulty && modifiers.messy) {
+                    const Embed = new MessageEmbed()
+                        .setColor('0xff5555')
+                        .setTitle(`😈 Messy Critical | 🗳️ Rolled \`${success}\` ${grammar.success_noun} out of  of \`${difficulty}\``)
+                        .setAuthor(message.author.username, message.author.displayAvatarURL())
+                        .setDescription(
+                            `${message.author.username} rolled a pool of \`${die}\` ${grammar.die_noun} with \`${hunger_die}\` Hunger ${grammar.hunger_die_noun} for a total of \`${success}\` ${grammar.success_noun} against a difficulty of \`${difficulty}\` after re-rolling \`${rerolled_die.length}\` ${grammar.rerolled_die_noun}.`
+                        )
+                        .addFields(
+                            {
+                                name: `🎲 ${grammar.die_noun.charAt(0).toUpperCase() + grammar.die_noun.slice(1)}`,
+                                value: `\`[${die_roll}]\``,
+                                inline: true
+                            },
+                            {
+                                name: `🩸 Hunger ${grammar.hunger_die_noun.charAt(0).toUpperCase() + grammar.hunger_die_noun.slice(1)}`,
+                                value: `\`[${hunger_die_roll}]\``,
+                                inline: true
+                            },
+                            {
+                                name: `🗳️ Difficulty`,
+                                value: `\`[${difficulty}]\``,
+                                inline: true                        
+                            },
+                            {
+                                name: `🔄 Re-rolled ${grammar.rerolled_die_noun.charAt(0).toUpperCase() + grammar.rerolled_die_noun.slice(1)}`,
+                                value: `\`[${rerolled_die}]\``,
+                                inline: true
+                            }
+                        );
+                    
+                    message.embed(Embed)
+                        .then(message => message.react('🔄'))
+                }
+                else if (success < difficulty && !modifiers.bestial) {
+                    const Embed = new MessageEmbed()
+                        .setColor('0xff5555')
+                        .setTitle(`👎 Failure | 🗳️ Rolled \`${success}\` ${grammar.success_noun} out of  of \`${difficulty}\``)
+                        .setAuthor(message.author.username, message.author.displayAvatarURL())
+                        .setDescription(
+                            `${message.author.username} rolled a pool of \`${die}\` ${grammar.die_noun} with \`${hunger_die}\` Hunger ${grammar.hunger_die_noun} for a total of \`${success}\` ${grammar.success_noun} against a difficulty of \`${difficulty}\` after re-rolling \`${rerolled_die.length}\` ${grammar.rerolled_die_noun}.`
+                        )
+                        .addFields(
+                            {
+                                name: `🎲 ${grammar.die_noun.charAt(0).toUpperCase() + grammar.die_noun.slice(1)}`,
+                                value: `\`[${die_roll}]\``,
+                                inline: true
+                            },
+                            {
+                                name: `🩸 Hunger ${grammar.hunger_die_noun.charAt(0).toUpperCase() + grammar.hunger_die_noun.slice(1)}`,
+                                value: `\`[${hunger_die_roll}]\``,
+                                inline: true
+                            },
+                            {
+                                name: `🗳️ Difficulty`,
+                                value: `\`[${difficulty}]\``,
+                                inline: true                        
+                            },
+                            {
+                                name: `🔄 Re-rolled ${grammar.rerolled_die_noun.charAt(0).toUpperCase() + grammar.rerolled_die_noun.slice(1)}`,
+                                value: `\`[${rerolled_die}]\``,
+                                inline: true
+                            }
+                        );
+                    
+                    message.embed(Embed)
+                        .then(message => message.react('🔄'))          
+                }
+                else if (success < difficulty && modifiers.bestial) {
+                    const Embed = new MessageEmbed()
+                        .setColor('0xff5555')
+                        .setTitle(`👿 Bestial Failure | 🗳️ Rolled \`${success}\` ${grammar.success_noun} out of  of \`${difficulty}\``)
+                        .setAuthor(message.author.username, message.author.displayAvatarURL())
+                        .setDescription(
+                            `${message.author.username} rolled a pool of \`${die}\` ${grammar.die_noun} with \`${hunger_die}\` Hunger ${grammar.hunger_die_noun} for a total of \`${success}\` ${grammar.success_noun} against a difficulty of \`${difficulty}\` after re-rolling \`${rerolled_die.length}\` ${grammar.rerolled_die_noun}.`
+                        )
+                        .addFields(
+                            {
+                                name: `🎲 ${grammar.die_noun.charAt(0).toUpperCase() + grammar.die_noun.slice(1)}`,
+                                value: `\`[${die_roll}]\``,
+                                inline: true
+                            },
+                            {
+                                name: `🩸 Hunger ${grammar.hunger_die_noun.charAt(0).toUpperCase() + grammar.hunger_die_noun.slice(1)}`,
+                                value: `\`[${hunger_die_roll}]\``,
+                                inline: true
+                            },
+                            {
+                                name: `🗳️ Difficulty`,
+                                value: `\`[${difficulty}]\``,
+                                inline: true                        
+                            },
+                            {
+                                name: `🔄 Re-rolled ${grammar.rerolled_die_noun.charAt(0).toUpperCase() + grammar.rerolled_die_noun.slice(1)}`,
+                                value: `\`[${rerolled_die}]\``,
+                                inline: true
+                            }
+                        );
+                    
+                    message.embed(Embed)
+                        .then(message => message.react('🔄'))     
+                };
             })
             .catch(err => console.log(err))
     };

@@ -20,9 +20,10 @@ module.exports = class CoinTossCommand extends Command {
         const Embed = new MessageEmbed()
             .setColor('0xf1fa8c')
             .setAuthor(message.author.username, message.author.displayAvatarURL())
+            
         if (coin === 1) {
                 Embed.setTitle('🪙 Heads')
-                Embed.setDescription(`${message.author.username} tossed a coin and got heads`)
+                Embed.setDescription(`${message.author.username} tossed a coin and got heads.`)
             
             message.embed(Embed)
                 .then(message => {
@@ -32,7 +33,7 @@ module.exports = class CoinTossCommand extends Command {
         }
         else if (coin === 2) {
                 Embed.setTitle('🪙 Tails')
-                Embed.setDescription(`${message.author.username} tossed a coin and got tails`)
+                Embed.setDescription(`${message.author.username} tossed a coin and got tails.`)
         
             message.embed(Embed)
                 .then(message => {

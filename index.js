@@ -9,7 +9,7 @@
 const { CommandoClient } = require('discord.js-commando');
 const { MessageEmbed } = require('discord.js');
 const path = require('path');
-const { prefix, token, ownerID, botID } = require('./config.json');
+const { prefix, token, ownerID } = require('./config.json');
 
 // Generates the bot object.
 const client =  new CommandoClient({
@@ -40,14 +40,7 @@ client.on('message', message => {
 
     // Filter for collecting reroll reactions for the $dice command.
     const dice_filter = (reaction, user) => {
-        return reaction.emoji.name === '🔄' &&
-        user.id != message.author.id &&
-        message.author.id === botID &&
-        message.reactions.cache.find(old_reaction => {
-            old_reaction.me &&
-            old_reaction.emoji.name === '🎲' &&
-            message.embeds[0].author.name === user.username
-        });
+        return reaction.emoji.name === '🔄' && user.id != message.author.id && message.author.id === client.user.id && message.reactions.cache.find(old_reaction => old_reaction.me && old_reaction.emoji.name === '🎲' && message.embeds[0].author.name === user.username);
     };
     // Reaction Collector for the $dice command.
     const dice_collector = message.createReactionCollector(dice_filter, { time: 20000, max: 1 });
@@ -75,10 +68,10 @@ client.on('message', message => {
     dice_collector.on('end', collected => {
         console.log(`Collected ${collected.size} items`);
     });
-
+    
     // Filter for collecting reactions for the $cointoss command.
     const coin_filter = (reaction, user) => {
-        return reaction.emoji.name === '🔄' && user.id != message.author.id && message.author.id === botID && message.reactions.cache.find(oldreaction => oldreaction.me && oldreaction.emoji.name === '🪙' && message.embeds[0].author.name === user.username);
+        return reaction.emoji.name === '🔄' && user.id != message.author.id && message.author.id === client.user.id && message.reactions.cache.find(oldreaction => oldreaction.me && oldreaction.emoji.name === '🪙' && message.embeds[0].author.name === user.username);
     };
     // Reaction Collector for the $cointoss command.
     const coin_collector = message.createReactionCollector(coin_filter, { time: 20000, max: 1 });
@@ -87,6 +80,7 @@ client.on('message', message => {
         console.log(`Collected ${reaction.emoji.name} from ${user.tag}, re-rolling...`);
         const coin = roll.roll('1d2').result;
         const Embed = new MessageEmbed(message.embeds[0])
+
         if (coin === 1) {
                 Embed.setTitle('🪙 Heads')
                 Embed.setDescription(`${message.author.username} tossed a coin and got heads`)
