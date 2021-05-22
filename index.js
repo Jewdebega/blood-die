@@ -9,12 +9,11 @@
 const { CommandoClient } = require('discord.js-commando');
 const { MessageEmbed } = require('discord.js');
 const path = require('path');
-const { prefix, token, ownerID } = require('./config.json');
 
 // Generates the bot object.
 const client =  new CommandoClient({
-    commandPrefix: prefix,
-    owner: ownerID,
+    commandPrefix: $,
+    owner: process.env.OWNERID,
 });
 
 // Registers the commands.
@@ -112,4 +111,4 @@ client.on('message', message => {
 client.on('error', console.error);
 
 // Logs in the bot with it's token.
-client.login(token);
+client.login(process.env.TOKEN);
