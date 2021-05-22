@@ -53,7 +53,7 @@ module.exports = class OblivionCommand extends Command {
             .setDescription(`${message.author.username} rolled a check and ${grammar.check}.`)
             .addFields(
                 {
-                    name: `🎲 ${grammar.die_noun.charAt(0).toUpperCase() + grammar.die_noun.slice(1)}:`,
+                    name: `🎲 ${grammar.die_noun.charAt(0).toUpperCase() + grammar.die_noun.slice(1)}`,
                     value: `\`[${die_roll}]\``,
                     inline: true
                 },

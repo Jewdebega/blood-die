@@ -40,7 +40,7 @@ module.exports = class DiceCommand extends Command {
             .setColor('0xff79c6')
             .setAuthor(message.author.username, message.author.displayAvatarURL())
             .setTitle(`Rolled \`${result}\``)
-            .addField('🎲 Dice:', `\`[${rolled}]\``, true)
+            .addField('🎲 Dice', `\`[${rolled}]\``, true)
             .addField('\u200B', '\u200B', true)
             .addField('🔧 Input', `\`${trimmed_input}\``, true);
         

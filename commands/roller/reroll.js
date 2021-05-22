@@ -65,7 +65,6 @@ module.exports = class RerollCommand extends Command {
         
         const old_messageID = message.reference.messageID;
         var recievedEmbed;
-        var newEmbed;
 
         message.channel.messages.fetch(old_messageID)
             .then(old_roll => {
