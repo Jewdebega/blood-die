@@ -12,7 +12,7 @@ const path = require('path');
 
 // Generates the bot object.
 const client =  new CommandoClient({
-    commandPrefix: $,
+    commandPrefix: '$',
     owner: process.env.OWNERID,
 });
 
