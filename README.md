@@ -6,6 +6,7 @@ Made with the [Discord.JS][Discord.js docs] and [Commando API][Commando docs].
 
 [Discord.js docs]:(https://discord.js.org/#/docs/main/stable/general/welcome)
 [Commando docs]:(https://discord.js.org/#/docs/commando/master/general/welcome)
+
 ---
 
 ## Installation
