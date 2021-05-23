@@ -6,6 +6,7 @@ Made with the [Discord.JS][Discord.js docs] and [Commando API][Commando docs].
 
 [Discord.js docs]:(https://discord.js.org/#/docs/main/stable/general/welcome)
 [Commando docs]:(https://discord.js.org/#/docs/commando/master/general/welcome)
+
 ---
 
 ## Installation
@@ -136,3 +137,10 @@ You can also use the :coin: emoji to call the command.
 `$:coin:`
 
 >___*Note:___ _Using the [reroll](#Reroll) command to reroll output of the cointoss command will cause an error, so the bot marks the embed with a_ :coin: _reaction to prevent this._
+
+---
+
+## Dependencies
+- [Discord.js](https://github.com/discordjs/discord.js)
+- [Commando](https://github.com/discordjs/Commando#readme)
+- [roll](https://github.com/troygoode/node-roll)
