@@ -34,7 +34,7 @@ The default prefix of the bot is `$`, but can be changed using the default `pref
 
 ![prefix example](./images/prefix_example.png "Prefix example")
 
-### :black_small_square: :ballot_box: Roll
+### · :ballot_box: Roll
 
 The `roll` command is the heart and soul of Blood Die and has three optional arguments: total dice of the pool, the amount of Hunger dice to replace regular dice with, and the difficulty of the roll.
 
@@ -56,7 +56,7 @@ The `roll` command is the heart and soul of Blood Die and has three optional arg
 
 ![roll example](./images/example_1.png "Roll example")
 
-### :black_small_square: :arrows_counterclockwise: Reroll
+### · :arrows_counterclockwise: Reroll
 
 The `reroll` command __requires__ the user to reply to the original roll and provide up to three indexes of the dice to be re-rolled. The command will also mark both the original roll and the re-roll with a :arrows_counterclockwise: reaction to prevent further re-rolls*. Only the original caller of a roll can call the re-roll of a given roll.
 
@@ -82,7 +82,7 @@ The command takes the *natural* index, i.e. the first die has to be accessed wit
 
 >___*Note:___ _You_ can _delete the reactions to allow further rerolls but this isn't the intended use of the bot and can't guarantee proper results._
 
-### :black_small_square: :thumbsup:/:drop_of_blood: Check
+### · :thumbsup:/:drop_of_blood: Check
 
 The `check` command rolls a single die by default and _checks_ whether the caller passed or not. If you send an argument, the bot will roll that many  dice and if any dice is a success (6 or more) the check is a success.
 
@@ -104,7 +104,7 @@ The `check` command rolls a single die by default and _checks_ whether the calle
 
 >___Note:___ _Using the_ :arrows_counterclockwise: _Reroll command to reroll output of the check command will cause an error, so the bot marks the embed with either a_ :thumbsup: _or a_ :drop_of_blood: _reaction to prevent this._
 
-### :black_small_square: :skull: Oblivion
+### · :skull: Oblivion
 
 This command is a _"fork"_ of check and functions the same way but on rolls of 1 or 10 the sent embed will note that the roll can result on a Stain on the caller's Humanity.
 
@@ -124,7 +124,7 @@ This command is a _"fork"_ of check and functions the same way but on rolls of 1
 
 >___Note:___ _Using the_ :arrows_counterclockwise: _Reroll command to reroll output of the oblivion command will cause an error, so the bot marks the embed with either a_ :thumbsup: _or a_ :drop_of_blood: _reaction to prevent this._
 
-### :black_small_square: :game_die: Dice
+### · :game_die: Dice
 
 A regular dice roll command, taking common dice notation as input.
 The bot will mark the embed with a :arrows_counterclockwise: reaction that if the original caller clicks within 20 seconds, the bot will re-roll the same common dice notation.
@@ -145,7 +145,7 @@ The bot will mark the embed with a :arrows_counterclockwise: reaction that if th
 
 >___Note:___ _Using the_ :arrows_counterclockwise: _Reroll command to reroll output of the dice command will cause an error, so the bot marks the embed with a_ :game_die: _reaction to prevent this._
 
-### :black_small_square: :coin: Cointoss
+### · :coin: Cointoss
 
 Toss a coin ~~to your Witcher.~~ A simple command to toss a coin and get either heads or tails. Similarly to the Dice command, reacting to the embed with :arrows_counterclockwise: will toss a new coin.
 
