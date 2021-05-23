@@ -7,7 +7,7 @@ module.exports = class CoinTossCommand extends Command {
     constructor(client) {
         super(client, {
             name: 'cointoss',
-            aliases: ['toss', 'ct', 't', '🪙'],
+            aliases: ['toss', 'ct', '🪙'],
             group: 'roller',
             memberName: 'cointoss',
             description: 'Toss a coin.',
