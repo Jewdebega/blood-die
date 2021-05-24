@@ -12,8 +12,6 @@ const { CommandoClient } = require('discord.js-commando');
 const { MessageEmbed } = require('discord.js');
 const path = require('path');
 
-const mongo_path = `mongodb+srv://blood-die-heroku:EK8ZFlRcfGewDgk7@blooddie.knwhi.mongodb.net/botdb?retryWrites=true&w=majority`
-
 // Generates the bot object.
 const client =  new CommandoClient({
     commandPrefix: '$',
@@ -21,7 +19,7 @@ const client =  new CommandoClient({
 });
 
 client.setProvider(
-    MongoClient.connect(mongo_path,{
+    MongoClient.connect(process.env.MONGOPATH,{
         useNewUrlParser: true,
         useUnifiedTopology: true
     })
