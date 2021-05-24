@@ -6,6 +6,8 @@
 "use strict";
 
 // Import requirements.
+const { MongoClient } = require('mongodb');
+const MongoDBProvider = require('commando-provider-mongo')
 const { CommandoClient } = require('discord.js-commando');
 const { MessageEmbed } = require('discord.js');
 const path = require('path');
@@ -15,6 +17,15 @@ const client =  new CommandoClient({
     commandPrefix: '$',
     owner: process.env.OWNERID,
 });
+
+client.setProvider(
+    MongoClient.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASSWROD}@blooddie.knwhi.mongodb.net/botdb?retryWrites=true&w=majority`,{
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    })
+        .then(client => new MongoDBProvider(client, 'BloodDie'))
+        .catch(err => console.log(err))
+).catch(err => console.log(err))
 
 // Registers the commands.
 client.registry

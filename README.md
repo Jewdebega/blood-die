@@ -1,14 +1,12 @@
 
-# ![profile picture](./images/blood_die_small.png "Profile picture") Blood Die
+# <img align="left" src="./images/blood_die_43x43.png">Blood Die
 
-## *A Discord bot for Vampire the Masquerade V5.*
+#### *A Discord bot for Vampire the Masquerade V5.*
 
 Made with the [Discord.JS][Discord.js docs] and [Commando API][Commando docs].
 
 [Discord.js docs]: https://discord.js.org/#/docs/main/stable/general/welcome
 [Commando docs]: https://discord.js.org/#/docs/commando/master/general/welcome
-
----
 
 ## :desktop_computer: Installation
 
