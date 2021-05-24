@@ -7,7 +7,7 @@
 
 // Import requirements.
 const { MongoClient } = require('mongodb');
-const MongoDBProvider = require('commando-provider-mongo')
+const { MongoDBProvider } = require('commando-provider-mongo')
 const { CommandoClient } = require('discord.js-commando');
 const { MessageEmbed } = require('discord.js');
 const path = require('path');
