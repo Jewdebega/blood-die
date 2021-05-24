@@ -12,6 +12,8 @@ const { CommandoClient } = require('discord.js-commando');
 const { MessageEmbed } = require('discord.js');
 const path = require('path');
 
+const mongo_path = `mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASSWROD}@blooddie.knwhi.mongodb.net/botdb?retryWrites=true&w=majority`
+
 // Generates the bot object.
 const client =  new CommandoClient({
     commandPrefix: '$',
@@ -19,7 +21,7 @@ const client =  new CommandoClient({
 });
 
 client.setProvider(
-    MongoClient.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASSWROD}@blooddie.knwhi.mongodb.net/botdb?retryWrites=true&w=majority`,{
+    MongoClient.connect(mongo_path,{
         useNewUrlParser: true,
         useUnifiedTopology: true
     })
